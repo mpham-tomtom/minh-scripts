@@ -1,0 +1,39 @@
+# copy to config.yaml and edit. secrets go in environment variables, not here:
+#   ANTHROPIC_API_KEY   (required)
+#   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID   (so it can message you)
+#   GEMINI_API_KEY      (optional - volume reading falls back to haiku without it)
+#   MOONSHOT_API_KEY    (optional - page building falls back to sonnet without it)
+
+# where to start: one subreddit and one product.
+subreddits:
+  - smallbusiness
+
+# agent two inputs. if you don't have a product yet, leave these empty and
+# run agent one (find-niches, then analyze-problems after a week of pulling).
+product: ""      # e.g. "a guide to fixing local seo"
+audience: ""     # e.g. "owners of single-location service businesses"
+price: "$29"
+
+# the public url railway gives the service, shown in telegram messages
+dashboard_url: ""
+
+# persistent storage. mount a railway volume here.
+data_dir: /data
+
+# the rate limit is about one request a minute from a single ip
+rss_min_seconds_between_requests: 60
+
+models:
+  orchestrator: claude-opus-5     # decides the order of things
+  matcher: claude-haiku-4-5       # reads the feeds and does the matching
+  writer: claude-sonnet-5         # posts, replies and subreddit profiles
+  volume_reader: gemini-2.5-flash # reading at volume
+  builder: kimi-k3                # landing page and dashboard shell
+
+schedule:
+  pull_every_minutes: 30
+  nightly_profile_update_hour: 2   # utc
+  morning_hour: 7                  # utc
+  weekly_analysis_weekday: 0       # monday
+  weekly_analysis_hour: 8          # utc
+  reply_stale_after_hours: 12

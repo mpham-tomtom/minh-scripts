@@ -1,0 +1,8 @@
+# railway service config. attach a volume mounted at /data so the agent
+# keeps its database, profiles and drafts between runs.
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "python -m redditagents run"
+restartPolicyType = "always"
